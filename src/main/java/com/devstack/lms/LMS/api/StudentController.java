@@ -78,4 +78,19 @@ public class StudentController {
                 HttpStatus.NO_CONTENT
         );
     }
+
+    @GetMapping("/search") // load -> get data
+    public ResponseEntity<StandardResponseDto> searchData(
+            @RequestParam String searchText,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+
+        return new ResponseEntity<>(
+                new StandardResponseDto(200,"Student data",
+                        studentService.search(searchText, page, size)),
+                HttpStatus.OK
+        );
+    }
+
 }

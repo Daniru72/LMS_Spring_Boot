@@ -2,13 +2,16 @@ package com.devstack.lms.LMS.service.impl;
 
 import com.devstack.lms.LMS.dto.request.RequestStudentDto;
 import com.devstack.lms.LMS.dto.response.ResponseStudentDto;
+import com.devstack.lms.LMS.dto.response.paginate.ResponseStudentPaginateDto;
 import com.devstack.lms.LMS.entity.Student;
 import com.devstack.lms.LMS.exception.EntryNotFoundException;
 import com.devstack.lms.LMS.repo.StudentRepo;
 import com.devstack.lms.LMS.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,22 @@ public class StudentServiceImpl implements StudentService {
                 studentRepo.findById(id).orElseThrow(()->new EntryNotFoundException("Student not found"));
         studentRepo.delete(selectedStudent);
     }
+
+    @Override
+    public ResponseStudentPaginateDto search(String searchText, int page, int size) {
+        return ResponseStudentPaginateDto
+                .builder()
+                .dataList(
+                        studentRepo.findAllByNameContaining(searchText, PageRequest.of(page, size))
+                                .stream().map(this::toResponseStudentDto).toList()
+                )
+                .count(studentRepo.countAllByNameContaining(searchText))
+                .build();
+    }
+
+
+
+
 
     private ResponseStudentDto toResponseStudentDto(Student student) {
         if (student == null) {
