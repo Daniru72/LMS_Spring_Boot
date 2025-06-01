@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface StudentService {
      void createStudent(RequestStudentDto dto);
+     void updateStudent(String id,RequestStudentDto dto);
      List<ResponseStudentDto> loadAllStudents();
      ResponseStudentDto findById(String id);
      void deleteById(String id);

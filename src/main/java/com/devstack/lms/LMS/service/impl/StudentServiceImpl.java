@@ -3,6 +3,7 @@ package com.devstack.lms.LMS.service.impl;
 import com.devstack.lms.LMS.dto.request.RequestStudentDto;
 import com.devstack.lms.LMS.dto.response.ResponseStudentDto;
 import com.devstack.lms.LMS.entity.Student;
+import com.devstack.lms.LMS.exception.EntryNotFoundException;
 import com.devstack.lms.LMS.repo.StudentRepo;
 import com.devstack.lms.LMS.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,18 @@ public class StudentServiceImpl implements StudentService {
         studentRepo.save(toStudent(dto));
     }
 
+
+    @Override
+    public void updateStudent(String id, RequestStudentDto dto) {
+        Student selectedStudent =
+                studentRepo.findById(id).orElseThrow(()->new EntryNotFoundException("Student not found"));
+        selectedStudent.setName(dto.getName());
+        selectedStudent.setAddress(dto.getAddress());
+        selectedStudent.setContact(dto.getContact());
+        studentRepo.save(selectedStudent);
+    }
+
+
     @Override
     public List<ResponseStudentDto> loadAllStudents() {
         /*List<Student> all = studentRepo.findAll();
@@ -38,14 +51,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseStudentDto findById(String id) {
         Student selectedStudent =
-                studentRepo.findById(id).orElseThrow(()->new RuntimeException("Student not found"));
+                studentRepo.findById(id).orElseThrow(()->new EntryNotFoundException("Student not found"));
         return toResponseStudentDto(selectedStudent);
     }
 
     @Override
     public void deleteById(String id) {
         Student selectedStudent =
-                studentRepo.findById(id).orElseThrow(()->new RuntimeException("Student not found"));
+                studentRepo.findById(id).orElseThrow(()->new EntryNotFoundException("Student not found"));
         studentRepo.delete(selectedStudent);
     }
 

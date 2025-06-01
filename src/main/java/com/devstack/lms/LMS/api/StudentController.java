@@ -51,6 +51,22 @@ public class StudentController {
         );
     }
 
+
+    @PutMapping("/{id}") // load -> get data
+    public ResponseEntity<StandardResponseDto> updateById(
+            @PathVariable String id,
+            @RequestBody RequestStudentDto requestStudentDto
+    ) {
+        studentService.updateStudent(id, requestStudentDto);
+
+        return new ResponseEntity<>(
+                new StandardResponseDto(200,"Student Data",null),
+                HttpStatus.OK
+        );
+    }
+
+
+
     @DeleteMapping("/{id}") // load -> get data
     public ResponseEntity<StandardResponseDto> deleteById(
             @PathVariable String id
